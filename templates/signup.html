@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | DermaScan AI</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: #f5faf7;
+            color: #243b35;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            border: 1px solid #e1eee7;
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 12px 36px rgba(36, 59, 53, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            color: #244f40;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            color: #5d7069;
+            line-height: 1.6;
+        }
+
+        .form-field {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbdcd2;
+            border-radius: 8px;
+            color: #243b35;
+            font: inherit;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 999px;
+            background: #4d8b70;
+            color: #ffffff;
+            cursor: pointer;
+            font: inherit;
+            font-weight: bold;
+        }
+
+        .submit-button:hover {
+            background: #3d755d;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            color: #a33b35;
+        }
+
+        .link {
+            margin: 22px 0 0;
+            color: #5d7069;
+            text-align: center;
+        }
+
+        .link a {
+            color: #3d755d;
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 30px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Create an Account</h1>
+        <p class="description">Sign up to get started with DermaScan AI.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="message" role="status">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+        {% if error %}
+        <p class="message" role="alert">{{ error }}</p>
+        {% endif %}
+
+        <form action="{{ url_for('signup') }}" method="post">
+            <div class="form-field">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" autocomplete="new-password" required>
+            </div>
+            <button class="submit-button" type="submit">Sign Up</button>
+        </form>
+
+        <p class="link">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+    </main>
+</body>
+</html>

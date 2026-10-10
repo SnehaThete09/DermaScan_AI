@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Product Image | DermaScan AI</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: #f5faf7;
+            color: #243b35;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            width: 100%;
+            max-width: 560px;
+            padding: 40px;
+            border: 1px solid #e1eee7;
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 12px 36px rgba(36, 59, 53, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            color: #244f40;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            color: #5d7069;
+            line-height: 1.6;
+        }
+
+        .form-field {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbdcd2;
+            border-radius: 8px;
+            color: #243b35;
+            font: inherit;
+        }
+
+        .upload-button {
+            width: 100%;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 999px;
+            background: #4d8b70;
+            color: #ffffff;
+            cursor: pointer;
+            font: inherit;
+            font-weight: bold;
+        }
+
+        .upload-button:hover {
+            background: #3d755d;
+        }
+
+        .message {
+            margin: 0 0 20px;
+            color: #3d755d;
+        }
+
+        .error {
+            color: #a33b35;
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 30px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Upload Product Image</h1>
+        <p class="description">Choose a product image in JPG, JPEG, or PNG format.</p>
+
+        {% if message %}
+        <p class="message" role="status">{{ message }}</p>
+        {% endif %}
+        {% if error %}
+        <p class="message error" role="alert">{{ error }}</p>
+        {% endif %}
+
+        <form action="{{ url_for('upload_product') }}" method="post" enctype="multipart/form-data">
+            <div class="form-field">
+                <label for="product-image">Product image</label>
+                <input
+                    id="product-image"
+                    name="product_image"
+                    type="file"
+                    accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                    required
+                >
+            </div>
+            <button class="upload-button" type="submit">Upload Product Image</button>
+        </form>
+    </main>
+</body>
+</html>

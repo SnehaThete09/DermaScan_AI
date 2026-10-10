@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | DermaScan AI</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f5faf7;
+            color: #243b35;
+            font-family: Arial, sans-serif;
+        }
+
+        .site-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e1eee7;
+        }
+
+        .header-content {
+            width: min(1120px, calc(100% - 40px));
+            min-height: 76px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            color: #244f40;
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        nav a {
+            color: #526a61;
+            font-size: 0.95rem;
+            text-decoration: none;
+        }
+
+        nav a:hover,
+        nav a[aria-current="page"] {
+            color: #3d755d;
+        }
+
+        .page-content {
+            width: min(1120px, calc(100% - 40px));
+            margin: 42px auto 64px;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .eyebrow {
+            margin: 0 0 10px;
+            color: #4d8b70;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            color: #244f40;
+            font-size: clamp(2rem, 5vw, 2.7rem);
+        }
+
+        .welcome-copy {
+            margin: 12px 0 0;
+            color: #5d7069;
+            line-height: 1.65;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            padding: 28px;
+            border: 1px solid #e1eee7;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 8px 24px rgba(36, 59, 53, 0.05);
+        }
+
+        .card h2 {
+            margin: 0 0 18px;
+            color: #244f40;
+            font-size: 1.2rem;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin: 0 0 22px;
+        }
+
+        .profile-details div {
+            padding: 14px;
+            border-radius: 10px;
+            background: #f5faf7;
+        }
+
+        dt {
+            margin-bottom: 7px;
+            color: #6c8077;
+            font-size: 0.82rem;
+        }
+
+        dd {
+            margin: 0;
+            color: #284c3f;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .muted-copy {
+            margin: 0 0 22px;
+            color: #5d7069;
+            line-height: 1.65;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 11px 18px;
+            border: 1px solid #4d8b70;
+            border-radius: 999px;
+            background: #4d8b70;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            border-color: #3d755d;
+            background: #3d755d;
+        }
+
+        .button-secondary {
+            background: #ffffff;
+            color: #3d755d;
+        }
+
+        .button-secondary:hover {
+            background: #f5faf7;
+            color: #315e4b;
+        }
+
+        .analysis-card {
+            grid-column: 1 / -1;
+        }
+
+        .analysis-empty {
+            margin: 0;
+            padding: 22px;
+            border: 1px dashed #cbdcd2;
+            border-radius: 10px;
+            color: #6c8077;
+            text-align: center;
+        }
+
+        @media (max-width: 760px) {
+            .header-content {
+                padding: 18px 0;
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            nav {
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 14px 20px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analysis-card {
+                grid-column: auto;
+            }
+
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content,
+            .page-content {
+                width: calc(100% - 32px);
+            }
+
+            .page-content {
+                margin-top: 30px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-content">
+            <a class="brand" href="{{ url_for('dashboard') }}">DermaScan AI</a>
+            <nav aria-label="Main navigation">
+                <a href="{{ url_for('dashboard') }}" aria-current="page">Home / Dashboard</a>
+                <a href="{{ url_for('profile') }}">Skin Profile</a>
+                <a href="{{ url_for('upload_product') }}">Scan Product</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <section class="welcome">
+            <p class="eyebrow">Your skincare workspace</p>
+            <h1>Welcome{% if user_name %}, {{ user_name }}{% endif %}</h1>
+            <p class="welcome-copy">
+                DermaScan AI helps you understand your skin and product labels
+                with personalized skin profiles and ingredient analysis.
+            </p>
+        </section>
+
+        <div class="dashboard-grid">
+            <section class="card">
+                <h2>Skin Profile</h2>
+                {% if skin_profile %}
+                <dl class="profile-details">
+                    <div>
+                        <dt>Skin Type</dt>
+                        <dd>{{ skin_profile.skin_type|capitalize }}</dd>
+                    </div>
+                    <div>
+                        <dt>Skin Concern</dt>
+                        <dd>{{ skin_profile.skin_concern|capitalize }}</dd>
+                    </div>
+                    <div>
+                        <dt>Sensitive Skin</dt>
+                        <dd>{{ skin_profile.sensitive_skin|capitalize }}</dd>
+                    </div>
+                </dl>
+                {% else %}
+                <p class="muted-copy">
+                    Complete your skin profile to get personalized recommendations.
+                </p>
+                {% endif %}
+                <a class="button button-secondary" href="{{ url_for('profile') }}">
+                    Create / Update Skin Profile
+                </a>
+            </section>
+
+            <section class="card">
+                <h2>Scan a Product</h2>
+                <p class="muted-copy">
+                    Upload a skincare product image to read its label and identify
+                    ingredients from the product text.
+                </p>
+                <a class="button" href="{{ url_for('upload_product') }}">Scan Product</a>
+            </section>
+
+            <section class="card analysis-card">
+                <h2>Recent Analysis</h2>
+                <p class="analysis-empty">No analysis yet</p>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

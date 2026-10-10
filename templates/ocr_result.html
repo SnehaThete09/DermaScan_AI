@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Text Results | DermaScan AI</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: #f5faf7;
+            color: #243b35;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            width: 100%;
+            max-width: 960px;
+            padding: 40px;
+            border: 1px solid #e1eee7;
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 12px 36px rgba(36, 59, 53, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            color: #244f40;
+        }
+
+        .description {
+            margin: 0 0 24px;
+            color: #5d7069;
+            line-height: 1.6;
+        }
+
+        h2 {
+            margin: 28px 0 12px;
+            color: #244f40;
+            font-size: 1.2rem;
+        }
+
+        .ingredient-list {
+            margin: 0;
+            padding-left: 24px;
+            line-height: 1.8;
+        }
+
+        .ingredient-information-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+            gap: 14px;
+        }
+
+        .ingredient-card {
+            min-width: 0;
+            padding: 18px;
+            border: 1px solid #e1eee7;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #ffffff, #f7fbf8);
+        }
+
+        .ingredient-card h3 {
+            margin: 0 0 16px;
+            color: #244f40;
+            font-size: 1.08rem;
+        }
+
+        .ingredient-card h4 {
+            margin: 0 0 6px;
+            color: #526a61;
+            font-size: 0.82rem;
+        }
+
+        .ingredient-section {
+            margin-top: 14px;
+        }
+
+        .ingredient-section:first-of-type {
+            margin-top: 0;
+        }
+
+        .ingredient-copy {
+            margin: 0;
+            color: #40584f;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .skin-type-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .skin-type-list li {
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: #eaf4ee;
+            color: #315e4b;
+            font-size: 0.78rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: bold;
+        }
+
+        .status-safe {
+            background: #e4f4e8;
+            color: #27633b;
+        }
+
+        .status-caution {
+            background: #fff3cf;
+            color: #795b00;
+        }
+
+        .status-avoid {
+            background: #fde8e6;
+            color: #963c35;
+        }
+
+        .compatibility-card {
+            margin: 24px 0;
+            padding: 22px;
+            border: 1px solid #cfe3d7;
+            border-radius: 14px;
+            background: #f2f8f4;
+        }
+
+        .compatibility-card h2 {
+            margin: 0 0 12px;
+        }
+
+        .compatibility-result {
+            margin: 0;
+            color: #244f40;
+            font-size: 1.35rem;
+            font-weight: bold;
+        }
+
+        .compatibility-score {
+            margin: 8px 0;
+            font-size: 1.05rem;
+            font-weight: bold;
+        }
+
+        .compatibility-reasons {
+            margin: 8px 0 16px;
+            padding-left: 22px;
+            line-height: 1.6;
+        }
+
+        .compatibility-note {
+            color: #5d7069;
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .compatibility-method {
+            margin-top: 14px;
+        }
+
+        .compatibility-method summary {
+            color: #3d755d;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .compatibility-table-wrap {
+            overflow-x: auto;
+        }
+
+        .compatibility-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .compatibility-table th,
+        .compatibility-table td {
+            padding: 10px;
+            border-bottom: 1px solid #dce9e0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .compatibility-table th {
+            color: #315e4b;
+        }
+
+        .irritation-level {
+            color: #40584f;
+            font-size: 0.9rem;
+            text-transform: capitalize;
+        }
+
+        .status {
+            color: #3d755d;
+        }
+
+        .error {
+            color: #a33b35;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 24px;
+            color: #3d755d;
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 30px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Product Analysis Results</h1>
+        <p class="description">
+            Image uploaded: <strong>{{ filename }}</strong>
+        </p>
+
+        {% if error %}
+        <p class="error" role="alert">{{ error }}</p>
+        {% else %}
+        <section class="compatibility-card" aria-labelledby="compatibility-heading">
+            <h2 id="compatibility-heading">Product Compatibility</h2>
+            {% if compatibility %}
+            <p class="compatibility-result">
+                {{ compatibility.icon }} {{ compatibility.label }}
+            </p>
+            <p class="compatibility-score">
+                Compatibility Score: {{ compatibility.score }}/100
+            </p>
+            <p><strong>Why (based on the available ingredient data):</strong></p>
+            <ul class="compatibility-reasons">
+                {% for reason in compatibility.reasons %}
+                <li>{{ reason }}</li>
+                {% endfor %}
+            </ul>
+            <p class="compatibility-note">
+                A Recommended result means the product may be suitable based on the
+                available ingredient data; individual responses can vary.
+            </p>
+            <h3>Ingredient compatibility summary</h3>
+            <div class="compatibility-table-wrap">
+                <table class="compatibility-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Ingredient</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ingredient in compatibility.ingredient_summary %}
+                        <tr>
+                            <th scope="row">{{ ingredient.name }}</th>
+                            <td>{{ ingredient.status }}</td>
+                            <td>{{ ingredient.reason }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <details class="compatibility-method">
+                <summary>How this score is calculated</summary>
+                <p class="compatibility-note">
+                    Each detected ingredient starts at 50 points. A listed skin-type match
+                    (including “all”) adds 25 points. If the type is not listed or the
+                    field is missing, the fit is Unknown and adds or subtracts no points.
+                    Benefits mentioning your selected concern add 15 points; missing
+                    concern benefits have no effect. For sensitive skin, low irritancy
+                    adds 5, medium subtracts 15, and high subtracts 30. For other profiles,
+                    medium irritancy subtracts 10 and high subtracts 20. An explicit
+                    dataset warning relevant to the profile subtracts 10. Scores are
+                    bounded to 0–100; the product score is the average. Scores of 75–100
+                    are Recommended, 50–74 are Use with Caution, and scores below 50 are
+                    Not Recommended.
+                </p>
+                <p class="compatibility-note">
+                    Ingredient status is Not Recommended below 50; Use with Caution when
+                    a relevant warning applies or the ingredient score is below 75;
+                    Compatible when there is a skin-type match and a score of at least 75;
+                    otherwise it is Insufficient Data / Unknown. An omitted skin type is
+                    not treated as evidence of incompatibility.
+                </p>
+                <p class="compatibility-note">
+                    Concern-supporting benefits are matched by these listed terms:
+                    acne—acne, blemish, pore; dryness—hydrat, moistur, dry;
+                    pigmentation—pigmentation, dark spot, brighten, even tone;
+                    aging—aging, fine line, wrinkle, mature, expression line, elasticity;
+                    redness—redness, soothe, calm, irritation, rosacea. “None” has no
+                    concern match. Relevant dataset warnings are matched by profile:
+                    sensitive skin—warnings about allergy, sensitivity, irritation,
+                    dryness, purging, tingling, or stinging; acne—comedogenicity or clogged
+                    pores; dryness—drying or stripping; pigmentation—photosensitivity.
+                    A matched warning subtracts 10. The CSV pregnancy-safety rating is not
+                    scored because pregnancy is not part of the skin profile. This is an
+                    informational matching rule, not a medical assessment.
+                </p>
+            </details>
+            {% elif not skin_profile %}
+            <p>
+                Add a skin profile to see a compatibility result based on the available
+                ingredient data.
+                <a href="{{ url_for('profile') }}">Create your skin profile</a>
+            </p>
+            {% else %}
+            <p>
+                Compatibility could not be scored because no known ingredients were
+                detected.
+            </p>
+            {% endif %}
+        </section>
+
+        <section aria-labelledby="detected-ingredients-heading">
+            <h2 id="detected-ingredients-heading">Detected Ingredients</h2>
+            {% if detected_ingredients %}
+            <ul class="ingredient-list">
+                {% for ingredient in detected_ingredients %}
+                <li>{{ ingredient }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No known ingredients detected.</p>
+            {% endif %}
+        </section>
+
+        <section aria-labelledby="ingredient-information-heading">
+            <h2 id="ingredient-information-heading">Ingredient Information</h2>
+            {% if ingredient_information %}
+            <div class="ingredient-information-grid">
+                {% for ingredient in ingredient_information %}
+                <article class="ingredient-card">
+                    <h3>{{ ingredient.name }}</h3>
+                    <section class="ingredient-section">
+                        <h4>What it does</h4>
+                        {% if ingredient.details["Function"] != "Information not available." %}
+                        <p class="ingredient-copy">
+                            {{ ingredient.details["Function"].replace(";", " · ") }}
+                            {% if ingredient.details["Benefits"] != "Information not available." %}
+                            —
+                            {% endif %}
+                        {% else %}
+                        <p class="ingredient-copy">
+                        {% endif %}
+                            {% if ingredient.details["Benefits"] != "Information not available." %}
+                                {% set benefits = ingredient.details["Benefits"].split(";") %}
+                                {% for benefit in benefits %}
+                                    {% if loop.index <= 2 %}
+                                        {{ benefit.strip() }}{% if not loop.last and loop.index == 1 and benefits|length > 1 %};{% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% elif ingredient.details["Function"] == "Information not available." %}
+                                Information not available.
+                            {% endif %}
+                        </p>
+                    </section>
+
+                    <section class="ingredient-section">
+                        <h4>Good for</h4>
+                        {% if ingredient.details["Skin types"] != "Information not available." %}
+                        <ul class="skin-type-list">
+                            {% for skin_type in ingredient.details["Skin types"].split(";") %}
+                            <li>{{ skin_type.strip() }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="ingredient-copy">Information not available.</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="ingredient-section">
+                        <h4>Safety</h4>
+                        {% set safety = ingredient.details["Safety"]|lower %}
+                        {% if safety == "safe" %}
+                        <span class="status-badge status-safe">🟢 Generally safe</span>
+                        {% elif safety == "caution" %}
+                        <span class="status-badge status-caution">🟡 Use with caution</span>
+                        {% elif safety == "avoid" %}
+                        <span class="status-badge status-avoid">🔴 Caution</span>
+                        {% else %}
+                        <p class="ingredient-copy">{{ ingredient.details["Safety"] }}</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="ingredient-section">
+                        <h4>Irritation</h4>
+                        <p class="irritation-level">{{ ingredient.details["Irritancy"] }}</p>
+                    </section>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No known ingredients detected.</p>
+            {% endif %}
+        </section>
+        {% endif %}
+
+        <a class="back-link" href="{{ url_for('upload_product') }}">Upload another image</a>
+    </main>
+</body>
+</html>

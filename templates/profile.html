@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Skin Profile | DermaScan AI</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: #f5faf7;
+            color: #243b35;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            width: 100%;
+            max-width: 560px;
+            padding: 40px;
+            border: 1px solid #e1eee7;
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 12px 36px rgba(36, 59, 53, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            color: #244f40;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            color: #5d7069;
+            line-height: 1.6;
+        }
+
+        .form-field {
+            margin-bottom: 20px;
+        }
+
+        label,
+        legend {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbdcd2;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #243b35;
+            font: inherit;
+        }
+
+        fieldset {
+            margin: 0 0 24px;
+            padding: 0;
+            border: 0;
+        }
+
+        .radio-option {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin: 4px 20px 0 0;
+            font-weight: normal;
+        }
+
+        .save-button {
+            width: 100%;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 999px;
+            background: #4d8b70;
+            color: #ffffff;
+            cursor: pointer;
+            font: inherit;
+            font-weight: bold;
+        }
+
+        .save-button:hover {
+            background: #3d755d;
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 30px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Create Your Skin Profile</h1>
+        <p class="description">Tell us a little about your skin to get started.</p>
+
+        {% if message %}
+        <p role="status">{{ message }}</p>
+        {% endif %}
+        {% if error %}
+        <p role="alert">{{ error }}</p>
+        {% endif %}
+
+        <form action="/profile" method="post">
+            <div class="form-field">
+                <label for="skin-type">Skin Type</label>
+                <select id="skin-type" name="skin_type" required>
+                    <option value="" disabled selected>Select your skin type</option>
+                    <option value="oily">Oily</option>
+                    <option value="dry">Dry</option>
+                    <option value="combination">Combination</option>
+                    <option value="normal">Normal</option>
+                    <option value="sensitive">Sensitive</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="skin-concern">Main Skin Concern</label>
+                <select id="skin-concern" name="skin_concern" required>
+                    <option value="" disabled selected>Select your main concern</option>
+                    <option value="acne">Acne</option>
+                    <option value="dryness">Dryness</option>
+                    <option value="pigmentation">Pigmentation</option>
+                    <option value="aging">Aging</option>
+                    <option value="redness">Redness</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+
+            <fieldset>
+                <legend>Sensitive Skin</legend>
+                <label class="radio-option">
+                    <input type="radio" name="sensitive_skin" value="yes" required>
+                    Yes
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="sensitive_skin" value="no">
+                    No
+                </label>
+            </fieldset>
+
+            <button class="save-button" type="submit">Save Profile</button>
+        </form>
+    </main>
+</body>
+</html>
